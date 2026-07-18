@@ -1,8 +1,8 @@
-# Blanket Fort（日本語）
+# 毛布の秘密基地（Blanket Fort）
 
 > グループチャットが、アプリをつくる。
 
-Blanket Fort（毛布の秘密基地）は、
+毛布の秘密基地（Blanket Fort）は、
 [Hermes Agent](https://hermes-agent.org)を使ったグループ向けアプリビルダーです。
 チャットで「夕食を決めるアプリを作って」のように頼むと、Hermesが小さな共有Web
 アプリを作り、公開し、そのリンクを会話へ返します。
@@ -37,7 +37,7 @@ Telegramのメッセージ
     ↓
 Hermesメッセージング・ゲートウェイ
     ↓
-Blanket Fortビルダー
+毛布の秘密基地ビルダー
     ↓
 安全な範囲でミニアプリを生成
     ↓
@@ -68,7 +68,7 @@ ngrok http 8787 --url https://kaycee-soundable-unappeasingly.ngrok-free.dev
 
 > Your group chat builds apps.
 
-Blanket Fort is a group-first app builder powered by
+Blanket Fort（毛布の秘密基地）is a group-first app builder powered by
 [Hermes Agent](https://hermes-agent.org). A friend asks for something useful in
 the chat—“make an app to help us decide what to do for dinner”—and the fort
 builds a tiny shared web app, publishes it, and replies with the link.

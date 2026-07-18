@@ -151,7 +151,7 @@ function renderIndex() {
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Blanket Fort mini apps</title>
+<title>Blanket Fort / 毛布の秘密基地 mini apps</title>
 <style>
   :root{color-scheme:dark}*{box-sizing:border-box}
   body{font:16px/1.6 system-ui,"Hiragino Sans","Yu Gothic",sans-serif;margin:0;min-height:100vh;padding:clamp(1.5rem,7vw,4rem);background:#17251f;color:#f6edda}
@@ -171,7 +171,7 @@ function renderIndex() {
 </style>
 <main>
   <div class="top">
-    <span class="brand">Blanket <b>Fort</b></span>
+    <span class="brand" data-i18n="brand">Blanket Fort</span>
     <div class="switcher" role="group" aria-label="Language / 言語">
       <button type="button" data-locale="ja" lang="ja">日本語</button><span>/</span>
       <button type="button" data-locale="en" lang="en">EN</button>
@@ -188,6 +188,7 @@ function renderIndex() {
 <script>
   const messages = {
     en: {
+      brand: "Blanket Fort",
       eyebrow: "Public app hub",
       title: "Mini apps",
       intro: "Open a tiny shared app built for a group chat.",
@@ -195,6 +196,7 @@ function renderIndex() {
       health: "Backend health ↗"
     },
     ja: {
+      brand: "毛布の秘密基地",
       eyebrow: "公開アプリハブ",
       title: "ミニアプリ",
       intro: "グループチャットから生まれた、小さな共有アプリを開いてみよう。",

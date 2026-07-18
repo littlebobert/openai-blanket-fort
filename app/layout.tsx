@@ -13,22 +13,22 @@ const display = Baloo_2({
 });
 
 export const metadata: Metadata = {
-  title: "Blanket Fort — your group chat builds apps",
+  title: "Blanket Fort / 毛布の秘密基地 — your group chat builds apps",
   description:
-    "Add an AI to the group chat. Blanket Fort turns the group's ideas and inside jokes into tiny shared apps, powered by Hermes Agent.",
+    "Blanket Fort（毛布の秘密基地）は、グループのアイデアや内輪ネタを小さな共有アプリに変えます。Powered by Hermes Agent.",
   icons: {
     icon: "/og.png",
     shortcut: "/og.png",
   },
   openGraph: {
-    title: "Blanket Fort — your group chat builds apps",
-    description: "The group riffs. Hermes builds. A shared app link drops into the thread.",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Blanket Fort" }],
+    title: "Blanket Fort / 毛布の秘密基地",
+    description: "The group riffs. Hermes builds. みんなのアイデアが共有アプリになる。",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Blanket Fort / 毛布の秘密基地" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blanket Fort — your group chat builds apps",
-    description: "The group riffs. Hermes builds. A shared app link drops into the thread.",
+    title: "Blanket Fort / 毛布の秘密基地",
+    description: "The group riffs. Hermes builds. みんなのアイデアが共有アプリになる。",
     images: ["/og.png"],
   },
 };

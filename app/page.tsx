@@ -7,6 +7,9 @@ type Locale = "en" | "ja";
 
 const copy = {
   en: {
+    brandLead: "Blanket",
+    brandAccent: "Fort",
+    brandFull: "Blanket Fort",
     navHow: "how it works",
     language: "Language",
     eyebrow: "Robotz Rules Game Studio presents",
@@ -111,6 +114,9 @@ const copy = {
     },
   },
   ja: {
+    brandLead: "毛布の",
+    brandAccent: "秘密基地",
+    brandFull: "毛布の秘密基地",
     navHow: "仕組み",
     language: "言語",
     eyebrow: "Robotz Rules Game Studio presents",
@@ -131,7 +137,7 @@ const copy = {
     howEyebrow: "ハッカソンMVPの仕組み",
     howTitle: <>小さなループがひとつ。<br />魔法はそれだけ。</>,
     howBody:
-      "Hermesがマルチプラットフォームのゲートウェイ、記憶、ターミナル、スキルを提供。Blanket Fortがグループ向けのビルダー体験を加えます。",
+      "Hermesがマルチプラットフォームのゲートウェイ、記憶、ターミナル、スキルを提供。毛布の秘密基地がグループ向けのビルダー体験を加えます。",
     steps: [
       ["グループが頼む", "TelegramやDiscordで@fortをメンションします。"],
       ["Hermesがつなぐ", "会話の文脈をミニアプリ・ビルダーへ渡します。"],
@@ -147,13 +153,13 @@ const copy = {
       ["2:20–3:00", "デモ練習、予備録画、仕上げ"],
     ],
     whyLead: "多くのAIアプリビルダーは、空のプロンプト欄から始まります。",
-    whyTitle: <>Blanket Fortは<br /><em>友だちから始まる。</em></>,
+    whyTitle: <>毛布の秘密基地は<br /><em>友だちから始まる。</em></>,
     climb: "Fortに入ってみる",
     footer: "Robotz Rules Game Studioのハッカソンプロジェクト · powered by Hermes Agent",
     demoTabsLabel: "グループアプリの例",
     builderReply: <>了解。Hermesが<strong>ミニアプリ・ビルダー</strong>に渡しています。</>,
     tapCard: "アプリカードをタップ ↑",
-    appReady: "がFortに完成",
+    appReady: "ができました",
     builtBy: "@fortが作成 · powered by Hermes Agent",
     close: "閉じる",
     demos: {
@@ -427,7 +433,7 @@ function PhoneDemo({ locale }: { locale: Locale }) {
             {"reply" in demoCopy && demoCopy.reply && (
               <p className="bubble mine compact">{demoCopy.reply}</p>
             )}
-            <span className="sender">Blanket Fort</span>
+            <span className="sender">{t.brandFull}</span>
             <p className="bubble fort">{t.builderReply}</p>
             <button className="app-link" onClick={() => setOpen(true)}>
               <span>{demoCopy.icon}</span>
@@ -520,8 +526,8 @@ export default function Home() {
     <main>
       <StringLights />
       <nav className="nav">
-        <a className="wordmark" href="#top" aria-label="Blanket Fort home">
-          Blanket <span>Fort</span>
+        <a className="wordmark" href="#top" aria-label={`${t.brandFull} home`}>
+          {t.brandLead} <span>{t.brandAccent}</span>
         </a>
         <div className="nav-actions">
           <a className="nav-link" href="#how">{t.navHow}</a>
@@ -604,7 +610,7 @@ export default function Home() {
       <footer>
         <StringLights />
         <div>
-          <span className="wordmark">Blanket <b>Fort</b></span>
+          <span className="wordmark">{t.brandLead} <b>{t.brandAccent}</b></span>
           <p>{t.footer}</p>
         </div>
       </footer>

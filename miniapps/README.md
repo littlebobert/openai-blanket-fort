@@ -1,4 +1,4 @@
-# Blanket Fort mini-app backend
+# 毛布の秘密基地 / Blanket Fort mini-app backend
 
 Start the local service:
 
