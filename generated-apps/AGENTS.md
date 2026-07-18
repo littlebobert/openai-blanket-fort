@@ -22,7 +22,7 @@ Use the existing same-origin backend when an app needs shared state:
 - `POST /api/apps/<slug>/votes` records a vote with a JSON request body.
 - `POST /api/apps/<slug>/spin` selects a result from the recorded votes.
 
-For group voting apps, show current vote totals and refresh shared state after mutations. Handle empty state and network errors clearly.
+For group voting apps, every vote request must include `userId`, `userName`, and `choice`. Create a stable per-browser `userId` with `localStorage` and `crypto.randomUUID()` when the chat platform has not supplied an identity. Show current vote totals and refresh shared state after mutations. Handle empty state and network errors clearly.
 
 For a dinner wheel specifically, let people vote for cuisine choices, show the shared totals, and let anyone spin from the voted choices.
 
