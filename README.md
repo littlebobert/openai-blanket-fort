@@ -21,6 +21,13 @@
 審査用DinnerWheelはTelegramやローカルMacを必要とせず、LPと一緒に常時公開されます。
 公開ミニアプリハブは、ライブ生成パイプラインと共有バックエンドのデモです。
 
+### Telegramでの実行証明
+
+![TelegramでHermesがDinnerWheelを生成する様子](public/telegram-build-proof.png)
+
+自然言語の依頼を受けたHermesが、ファイルを検索・生成し、英語・日本語対応の共有
+DinnerWheelへのリンクをTelegramへ返しています。
+
 サイトとミニアプリハブは日本語・英語に対応しています。初回表示は端末のUI言語に
 合わせ、画面上の切り替えで選んだ言語はブラウザに保存されます。
 
@@ -99,6 +106,13 @@ The judge-ready DinnerWheel is hosted with the landing page and requires no
 Telegram setup or local demo machine. The generated-app hub demonstrates the
 live Hermes publishing pipeline and shared backend when the demo machine is
 online.
+
+### Telegram build proof
+
+![Hermes generating DinnerWheel from Telegram](public/telegram-build-proof.png)
+
+Hermes receives the natural-language request, reports its file operations, and
+returns a link to the completed bilingual shared DinnerWheel.
 
 The production build passes with:
 
