@@ -40,4 +40,7 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
-/generated-apps/.blanket-fort/
+
+# Runtime-generated mini apps and shared state
+/generated-apps/*
+!/generated-apps/AGENTS.md

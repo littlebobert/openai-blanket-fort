@@ -11,6 +11,7 @@ const copy = {
     brandAccent: "Fort",
     brandFull: "Blanket Fort",
     navHow: "how it works",
+    navApps: "live apps",
     language: "Language",
     eyebrow: "Robotz Rules Game Studio presents",
     heroLine1: "Your group chat",
@@ -21,7 +22,8 @@ const copy = {
         into a tiny shared app and drops the link back into the thread.
       </>
     ),
-    tryDemo: "try the working demo",
+    tryDemo: "try DinnerWheel",
+    exploreDemo: "explore the product",
     hackathon: "3-hour hackathon build",
     runtime: "Agent runtime",
     noAdults: "no adults allowed",
@@ -118,6 +120,7 @@ const copy = {
     brandAccent: "秘密基地",
     brandFull: "毛布の秘密基地",
     navHow: "仕組み",
+    navApps: "公開アプリ",
     language: "言語",
     eyebrow: "Robotz Rules Game Studio presents",
     heroLine1: "グループチャットが",
@@ -127,7 +130,8 @@ const copy = {
         チャットに<strong>@fort</strong>を追加。みんなのアイデアやノリをHermesが小さな共有アプリにして、リンクをスレッドへ届けます。
       </>
     ),
-    tryDemo: "デモを試す",
+    tryDemo: "夕食ルーレットを試す",
+    exploreDemo: "プロダクトを見る",
     hackathon: "3時間ハッカソン作品",
     runtime: "エージェント基盤",
     noAdults: "大人は立入禁止",
@@ -531,6 +535,14 @@ export default function Home() {
         </a>
         <div className="nav-actions">
           <a className="nav-link" href="#how">{t.navHow}</a>
+          <a
+            className="nav-link"
+            href="https://kaycee-soundable-unappeasingly.ngrok-free.dev/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t.navApps} ↗
+          </a>
           <LanguageSwitcher locale={locale} setLocale={setLocale} />
         </div>
       </nav>
@@ -545,7 +557,8 @@ export default function Home() {
           </h1>
           <p>{t.heroBody}</p>
           <div className="hero-actions">
-            <a className="cta" href="#demo">{t.tryDemo} <span>↓</span></a>
+            <a className="cta" href="/demo/dinner-wheel">{t.tryDemo} <span>→</span></a>
+            <a className="text-cta" href="#demo">{t.exploreDemo} <span>↓</span></a>
             <span className="status-pill"><i /> {t.hackathon}</span>
           </div>
           <div className="powered">

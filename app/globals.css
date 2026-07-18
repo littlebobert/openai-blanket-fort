@@ -257,6 +257,21 @@ h2 em {
   box-shadow: 0 14px 34px rgba(255, 157, 71, 0.24);
 }
 
+.text-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 6px;
+  color: var(--sage);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.text-cta:hover {
+  color: var(--lime);
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -974,6 +989,265 @@ h2 em {
 footer {
   padding: 0 20px 55px;
   text-align: center;
+}
+
+/* Stable, judge-accessible DinnerWheel route */
+.judge-app {
+  min-height: 100vh;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 50% 0, rgba(201, 221, 103, 0.09), transparent 34rem),
+    var(--night);
+}
+
+.judge-nav,
+.judge-shell {
+  width: min(1040px, 100%);
+  margin: 0 auto;
+}
+
+.judge-nav {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--sage);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.judge-heading {
+  padding: 54px 0 34px;
+  text-align: center;
+}
+
+.judge-heading h1 {
+  margin-top: 8px;
+  font-size: clamp(48px, 9vw, 88px);
+  line-height: 1;
+}
+
+.judge-heading p {
+  margin: 14px auto 0;
+  color: var(--dim);
+  font-size: 18px;
+}
+
+.judge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.vote-card,
+.wheel-card,
+.totals-card {
+  border: 1px solid #405c4c;
+  border-radius: 24px;
+  background: rgba(32, 52, 42, 0.88);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+}
+
+.vote-card,
+.wheel-card {
+  min-height: 470px;
+  padding: clamp(22px, 4vw, 36px);
+}
+
+.vote-card label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--sage);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vote-card input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #506d5d;
+  border-radius: 12px;
+  outline: none;
+  background: var(--night);
+  color: var(--cream);
+  font: inherit;
+}
+
+.vote-card input:focus {
+  border-color: var(--glow);
+}
+
+.cuisine-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+  margin: 18px 0;
+}
+
+.cuisine-grid button {
+  min-height: 58px;
+  padding: 10px;
+  border: 1px solid #456151;
+  border-radius: 13px;
+  background: var(--night-2);
+  color: var(--dim);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.cuisine-grid button span {
+  display: block;
+  font-size: 21px;
+}
+
+.cuisine-grid button:hover,
+.cuisine-grid button.selected {
+  border-color: var(--lime);
+  color: var(--cream);
+  background: var(--patch);
+}
+
+.judge-vote {
+  width: 100%;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+}
+
+.wheel-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.demo-wheel-wrap {
+  position: relative;
+  width: 230px;
+  height: 230px;
+  margin-bottom: 22px;
+}
+
+.demo-wheel {
+  position: absolute;
+  inset: 0;
+  border: 8px solid var(--cream);
+  border-radius: 50%;
+  background: conic-gradient(
+    #f39b55 0 60deg,
+    #c9dd67 60deg 120deg,
+    #8fc7a8 120deg 180deg,
+    #3d7bfb 180deg 240deg,
+    #d889bc 240deg 300deg,
+    #f0cf69 300deg
+  );
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+  transition: transform 1.6s cubic-bezier(.16,.76,.19,1);
+}
+
+.demo-wheel span {
+  position: absolute;
+  top: 14px;
+  left: calc(50% - 14px);
+  width: 28px;
+  height: 101px;
+  text-align: center;
+  transform-origin: 50% 101px;
+  font-size: 25px;
+}
+
+.demo-wheel-pointer {
+  position: absolute;
+  z-index: 2;
+  top: -10px;
+  left: calc(50% - 12px);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 25px solid var(--cream);
+}
+
+.wheel-card .cta {
+  border: 0;
+  cursor: pointer;
+}
+
+.wheel-card .cta:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.7);
+  opacity: 0.5;
+}
+
+.judge-result {
+  min-height: 56px;
+  margin: 16px 0 0;
+  color: var(--dim);
+}
+
+.judge-result small,
+.judge-result strong {
+  display: block;
+}
+
+.judge-result strong {
+  color: var(--lime);
+  font-size: 25px;
+}
+
+.totals-card {
+  margin-top: 18px;
+  padding: 22px;
+}
+
+.totals-card h2 {
+  font-size: 21px;
+}
+
+.totals-card > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.totals-card span {
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: var(--night);
+  color: var(--dim);
+  font-size: 13px;
+}
+
+.totals-card b {
+  margin-left: 5px;
+  color: var(--lime);
+}
+
+.judge-note {
+  margin: 16px 0 40px;
+  color: #71857a;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .judge-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .judge-heading {
+    padding-top: 34px;
+  }
+
+  .vote-card,
+  .wheel-card {
+    min-height: auto;
+  }
 }
 
 footer > div:last-child {

@@ -12,11 +12,14 @@
 ## 審査用クイックパス
 
 1. [公開デモ](https://blanket-fort-hermes.littlebobert.chatgpt.site)を開きます。
-2. **ワンタップでわかる体験**までスクロールします。
-3. **夕食ルーレット**、**ゲームナイト**、**トーナメント**を切り替えます。
-4. スマートフォン内のアプリカードをタップします。
-5. 生成されたミニアプリを操作します。
-6. [公開ミニアプリハブ](https://kaycee-soundable-unappeasingly.ngrok-free.dev/)を開きます。
+2. [審査用DinnerWheel](https://blanket-fort-hermes.littlebobert.chatgpt.site/demo/dinner-wheel)で投票し、ルーレットを回します。
+3. LPの**ワンタップでわかる体験**までスクロールします。
+4. **夕食ルーレット**、**ゲームナイト**、**トーナメント**を切り替えます。
+5. スマートフォン内のアプリカードをタップします。
+6. [公開ミニアプリハブ](https://kaycee-soundable-unappeasingly.ngrok-free.dev/)でHermesが生成したアプリを確認します。
+
+審査用DinnerWheelはTelegramやローカルMacを必要とせず、LPと一緒に常時公開されます。
+公開ミニアプリハブは、ライブ生成パイプラインと共有バックエンドのデモです。
 
 サイトとミニアプリハブは日本語・英語に対応しています。初回表示は端末のUI言語に
 合わせ、画面上の切り替えで選んだ言語はブラウザに保存されます。
@@ -81,12 +84,21 @@ This submission is designed to be understood and evaluated quickly.
 
 1. Open the
    [deployed product demo](https://blanket-fort-hermes.littlebobert.chatgpt.site).
-2. Scroll to **The pitch, in one tap**.
-3. Switch between **dinner wheel**, **game night**, and **bracket**.
-4. Tap the app card inside the phone.
-5. Interact with the generated mini-app.
-6. Review [`app/page.tsx`](app/page.tsx) for the product implementation and
+2. Open the
+   [judge-ready DinnerWheel](https://blanket-fort-hermes.littlebobert.chatgpt.site/demo/dinner-wheel),
+   cast votes, and spin.
+3. On the landing page, scroll to **The pitch, in one tap**.
+4. Switch between **dinner wheel**, **game night**, and **bracket**.
+5. Tap the app card inside the phone.
+6. Optionally inspect the
+   [live generated-app hub](https://kaycee-soundable-unappeasingly.ngrok-free.dev/).
+7. Review [`app/page.tsx`](app/page.tsx) for the product implementation and
    [`app/globals.css`](app/globals.css) for the responsive visual system.
+
+The judge-ready DinnerWheel is hosted with the landing page and requires no
+Telegram setup or local demo machine. The generated-app hub demonstrates the
+live Hermes publishing pipeline and shared backend when the demo machine is
+online.
 
 The production build passes with:
 
@@ -211,6 +223,7 @@ app/
 miniapps/
   server.mjs     Shared app hosting, state, voting, and spin API
 generated-apps/
+  AGENTS.md     Hermes publishing contract (tracked)
   <slug>/        Hermes-generated mini apps
 public/
   og.png         Generated Blanket Fort social card
@@ -243,6 +256,6 @@ npm test       # build plus rendered HTML checks
 
 ## Next milestone
 
-Complete the DinnerWheel UI against the shared vote API and have Hermes return
-its ngrok URL automatically in Telegram. After the demo, move the backend to a
-durable cloud runtime and replace the local JSON store with a hosted database.
+Move the live generated-app backend to a durable cloud runtime, then add LINE
+as the Japan-native messaging channel. The stable hosted DinnerWheel remains
+available as the judge-safe fallback.
