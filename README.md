@@ -11,7 +11,7 @@ app returns to the chat as a public link.
 
 The current prototype runs end to end in the cloud: Hermes, GPT-5.6 Sol, the
 Telegram gateway, generated apps, and their shared backend are hosted on
-Railway. No developer laptop or ngrok tunnel is required.
+Railway.
 
 ![Blanket Fort social card](public/og.png)
 
