@@ -22,7 +22,7 @@ const copy = {
         into a tiny shared app and drops the link back into the thread.
       </>
     ),
-    tryDemo: "try DinnerWheel",
+    tryDemo: "try an example app built this way",
     exploreDemo: "explore the product",
     hackathon: "3-hour hackathon build",
     runtime: "Agent runtime",
@@ -130,7 +130,7 @@ const copy = {
         チャットに<strong>@fort</strong>を追加。みんなのアイデアやノリをHermesが小さな共有アプリにして、リンクをスレッドへ届けます。
       </>
     ),
-    tryDemo: "夕食ルーレットを試す",
+    tryDemo: "この方法で作ったアプリを試す",
     exploreDemo: "プロダクトを見る",
     hackathon: "3時間ハッカソン作品",
     runtime: "エージェント基盤",
