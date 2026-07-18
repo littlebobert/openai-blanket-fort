@@ -29,3 +29,30 @@ metadata remain visible with a slug-based fallback title.
 - `POST /api/apps/<slug>/spin`
 
 State persists locally in `generated-apps/.blanket-fort/state.json`.
+
+Cross-origin requests are enabled by default because generated mini apps are
+public and use no cookies or credentials. In production, restrict this to known
+app origins:
+
+```bash
+MINIAPPS_ALLOWED_ORIGINS=https://example.pages.dev,https://apps.example.com npm run miniapps
+```
+
+## Prepare a standalone repository
+
+```bash
+npm run publish-app -- dinner-wheel
+```
+
+This creates a clean repository-shaped export under
+`work/published-apps/dinner-wheel`, including GitHub Pages deployment,
+`AGENTS.md`, `CLAUDE.md`, and a configurable shared API URL.
+
+After authenticating GitHub CLI, create and deploy a public repository:
+
+```bash
+gh auth login
+npm run publish-app -- dinner-wheel --push --owner=littlebobert
+```
+
+Every later push to `main` automatically redeploys the app.

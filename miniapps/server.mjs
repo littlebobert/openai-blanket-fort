@@ -19,6 +19,10 @@ const DATA_DIR = join(APPS_ROOT, ".blanket-fort");
 const DATA_FILE = join(DATA_DIR, "state.json");
 const MAX_BODY_BYTES = 256 * 1024;
 const SLUG_PATTERN = /^[a-z0-9][a-z0-9-]{0,62}$/;
+const ALLOWED_ORIGINS = (process.env.MINIAPPS_ALLOWED_ORIGINS || "*")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
@@ -88,6 +92,21 @@ function sendJson(response, status, value) {
 function sendText(response, status, value, contentType = "text/plain; charset=utf-8") {
   response.writeHead(status, commonHeaders(contentType));
   response.end(value);
+}
+
+function applyCors(request, response) {
+  const origin = String(request.headers.origin || "");
+  if (!origin) return;
+  if (ALLOWED_ORIGINS.includes("*")) {
+    response.setHeader("access-control-allow-origin", "*");
+  } else if (ALLOWED_ORIGINS.includes(origin)) {
+    response.setHeader("access-control-allow-origin", origin);
+    response.setHeader("vary", "Origin");
+  } else {
+    throw Object.assign(new Error("Origin is not allowed"), { status: 403 });
+  }
+  response.setHeader("access-control-allow-headers", "Content-Type");
+  response.setHeader("access-control-allow-methods", "GET, PUT, POST, OPTIONS");
 }
 
 async function readJson(request) {
@@ -404,6 +423,12 @@ const server = createServer(async (request, response) => {
   const startedAt = Date.now();
   try {
     const url = new URL(request.url || "/", `http://${request.headers.host || "localhost"}`);
+    applyCors(request, response);
+
+    if (request.method === "OPTIONS") {
+      response.writeHead(204, { "cache-control": "no-store" });
+      return response.end();
+    }
 
     if (request.method === "GET" && url.pathname === "/health") {
       return sendJson(response, 200, {

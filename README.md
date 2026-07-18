@@ -73,6 +73,17 @@ ngrok経由で公開
 - ハッカソン版の共有データはローカルJSONへ保存されます。本番版では同じAPI契約を
   クラウドDBへ移せます。
 
+## 本番化への道
+
+`npm run publish-app -- <slug>`で、生成アプリを独立したリポジトリとして準備できます。
+出力にはGitHub Pagesの自動デプロイ、Codex用`AGENTS.md`、Claude用`CLAUDE.md`、
+共有API設定が含まれます。GitHub認証後に`--push --owner=<owner>`を追加すると、
+公開リポジトリを作成し、`main`への以後のpushで自動デプロイされます。
+
+推奨構成は、HermesをRailwayまたはFly.ioの永続Linuxコンテナで動かし、
+Cloudflare Pagesでアプリを配信、WorkersとDurable Objects/D1で共有状態を扱う形です。
+詳しくは[`docs/production-hosting.md`](docs/production-hosting.md)を参照してください。
+
 ## ローカル起動
 
 Node.js `>=22.13.0`が必要です。
@@ -237,6 +248,19 @@ Shared Node.js backend ── ngrok public URL ── group members
 - The Telegram screenshot remains verifiable evidence of the successful
   end-to-end build if the live demo machine is offline during judging.
 
+## Production path
+
+`npm run publish-app -- <slug>` prepares a generated app as its own repository,
+including GitHub Pages continuous deployment, `AGENTS.md` for Codex,
+`CLAUDE.md` for Claude, and a configurable shared API. Once GitHub CLI is
+authenticated, add `--push --owner=<owner>` to create the repository; every
+later push to `main` automatically redeploys it.
+
+The recommended split is Hermes on a persistent Railway or Fly.io Linux
+container, apps on Cloudflare Pages, and shared state on Cloudflare Workers
+with Durable Objects or D1. See
+[`docs/production-hosting.md`](docs/production-hosting.md).
+
 ## Repository map
 
 ```text
@@ -247,6 +271,8 @@ app/
   layout.tsx                      Metadata and social sharing
 miniapps/
   server.mjs                      App hosting, state, votes, and spin API
+scripts/
+  publish-miniapp.mjs             Standalone repo and auto-deploy publisher
 generated-apps/
   AGENTS.md                       Hermes publishing contract (tracked)
   <slug>/                         Runtime-generated mini apps (gitignored)
