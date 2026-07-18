@@ -2,10 +2,16 @@
 
 > グループチャットが、アプリをつくる。
 
-毛布の秘密基地は、グループの会話を、その場で使える小さな共有Webアプリに変える
-[Hermes Agent](https://hermes-agent.org)プロジェクトです。友だちがチャットで
-アイデアを伝えると、Hermesがアプリを生成し、進捗を報告して、公開リンクを会話へ
-返します。
+**Codexは素晴らしいアプリビルダーです。毛布の秘密基地は、それをマルチプレイヤーにします。**
+
+毛布の秘密基地なら、技術者ではない友だちも、いつものグループチャットから小さな
+共有アプリを一緒につくり、その場で使えます。
+[Hermes Agent](https://hermes-agent.org)が会話をCodexへ届け、生成の進捗を報告し、
+完成したアプリを公開して、そのリンクをチャットへ返します。現在の実装はTelegram
+から始まります。
+
+このハッカソンでは、Telegramへの一つの依頼から、ライブ投票と公開URLを持つ
+日英バイリンガルのDinnerWheelを実際に生成しました。
 
 ![Blanket Fort ソーシャルカード](public/og.png)
 
@@ -95,10 +101,15 @@ npm test
 
 > Your group chat builds apps.
 
-Blanket Fort is a group-first app builder powered by
-[Hermes Agent](https://hermes-agent.org). A friend describes something useful
-in the chat; Hermes builds a small shared web app, reports its progress, and
-returns a public link to the conversation.
+**Codex is an incredible app builder. Blanket Fort makes it multiplayer.**
+
+Blanket Fort lets non-technical friends create and use small shared apps inside
+a group chat they already use. [Hermes Agent](https://hermes-agent.org) brings
+the conversation to Codex, reports the build progress, publishes the result,
+and returns the link—starting with Telegram.
+
+During this hackathon, one Telegram request produced a bilingual shared
+DinnerWheel with live voting and a public URL.
 
 ![Blanket Fort social card](public/og.png)
 
