@@ -56,4 +56,7 @@ test("landing page and mini-app hub support device-aware Japanese and English", 
   assert.match(hub, /公開アプリハブ/);
   assert.match(hub, /ミニアプリ/);
   assert.match(hub, /毛布の秘密基地/);
+  assert.match(hub, /app\.json/);
+  assert.match(hub, /Original prompt/);
+  assert.match(hub, /data-copy-en/);
 });

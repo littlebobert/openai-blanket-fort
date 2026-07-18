@@ -140,12 +140,82 @@ function listApps() {
     .sort();
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function localizedField(value, fallback) {
+  if (typeof value === "string" && value.trim()) {
+    return { en: value.trim(), ja: value.trim() };
+  }
+  if (value && typeof value === "object") {
+    const en = typeof value.en === "string" && value.en.trim() ? value.en.trim() : "";
+    const ja = typeof value.ja === "string" && value.ja.trim() ? value.ja.trim() : "";
+    if (en || ja) return { en: en || ja, ja: ja || en };
+  }
+  return { en: fallback, ja: fallback };
+}
+
+function appMetadata(slug) {
+  const fallbackTitle = slug
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
+  let metadata = {};
+  const metadataFile = join(APPS_ROOT, slug, "app.json");
+  if (existsSync(metadataFile)) {
+    try {
+      const parsed = JSON.parse(readFileSync(metadataFile, "utf8"));
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        metadata = parsed;
+      }
+    } catch {
+      metadata = {};
+    }
+  }
+
+  const title = localizedField(metadata.title, fallbackTitle);
+  const description = localizedField(metadata.description, `A shared ${fallbackTitle} mini app.`);
+  const prompt = localizedField(metadata.prompt, "");
+  const emoji =
+    typeof metadata.emoji === "string" && metadata.emoji.trim()
+      ? metadata.emoji.trim().slice(0, 8)
+      : "✦";
+
+  return { slug, title, description, prompt, emoji };
+}
+
 function renderIndex() {
   const items = listApps()
-    .map(
-      (slug) =>
-        `<li><a href="/apps/${encodeURIComponent(slug)}/">${slug}</a></li>`,
-    )
+    .map(appMetadata)
+    .map(({ slug, title, description, prompt, emoji }) => {
+      const promptBlock =
+        prompt.en || prompt.ja
+          ? `<div class="prompt">
+              <b data-i18n="promptLabel">Original prompt</b>
+              <q data-copy-en="${escapeHtml(prompt.en)}" data-copy-ja="${escapeHtml(prompt.ja)}">${escapeHtml(prompt.en)}</q>
+            </div>`
+          : "";
+      return `<li>
+        <a class="app-card" href="/apps/${encodeURIComponent(slug)}/">
+          <div class="app-heading">
+            <span class="app-emoji" aria-hidden="true">${escapeHtml(emoji)}</span>
+            <div>
+              <h2 data-copy-en="${escapeHtml(title.en)}" data-copy-ja="${escapeHtml(title.ja)}">${escapeHtml(title.en)}</h2>
+              <p data-copy-en="${escapeHtml(description.en)}" data-copy-ja="${escapeHtml(description.ja)}">${escapeHtml(description.en)}</p>
+            </div>
+          </div>
+          ${promptBlock}
+          <span class="open" data-i18n="open">Open app →</span>
+        </a>
+      </li>`;
+    })
     .join("");
   return `<!doctype html>
 <html lang="en">
@@ -155,7 +225,7 @@ function renderIndex() {
 <style>
   :root{color-scheme:dark}*{box-sizing:border-box}
   body{font:16px/1.6 system-ui,"Hiragino Sans","Yu Gothic",sans-serif;margin:0;min-height:100vh;padding:clamp(1.5rem,7vw,4rem);background:#17251f;color:#f6edda}
-  main{max-width:52rem;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+  main{max-width:58rem;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:1rem}
   .brand{font-weight:900}.brand b,.eyebrow,a{color:#c9dd67}
   .switcher{display:flex;align-items:center;gap:.35rem;color:#71857a;font-size:.75rem;font-weight:900}
   button{border:0;background:transparent;color:#71857a;font:inherit;font-weight:900;cursor:pointer;padding:.35rem}
@@ -163,9 +233,14 @@ function renderIndex() {
   .eyebrow{margin-top:5rem;font-size:.75rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
   h1{font-size:clamp(2.8rem,10vw,6rem);line-height:.93;letter-spacing:-.055em;margin:.2em 0}
   .intro{max-width:38rem;color:#b9b8a5}
-  ul{display:grid;gap:.8rem;padding:0;margin:2rem 0;list-style:none}
-  li a{display:block;padding:1rem 1.2rem;border:1px solid #425d4d;border-radius:1rem;background:#20342a;font-weight:900;text-decoration:none;transition:transform .15s,border-color .15s}
-  li a:hover{border-color:#ff9d47;transform:translateY(-1px)}
+  ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:1rem;padding:0;margin:2rem 0;list-style:none}
+  .app-card{display:flex;min-height:100%;flex-direction:column;gap:1rem;padding:1.25rem;border:1px solid #425d4d;border-radius:1.25rem;background:#20342a;text-decoration:none;transition:transform .15s,border-color .15s,background .15s}
+  .app-card:hover{border-color:#ff9d47;transform:translateY(-2px);background:#263d32}
+  .app-heading{display:flex;align-items:flex-start;gap:.9rem}.app-emoji{display:grid;flex:0 0 3rem;height:3rem;place-items:center;border-radius:.85rem;background:#17251f;font-size:1.45rem}
+  h2{margin:0;color:#f6edda;font-size:1.2rem;line-height:1.2}.app-heading p{margin:.35rem 0 0;color:#b9b8a5;font-size:.9rem;line-height:1.5}
+  .prompt{padding:.8rem .9rem;border-left:2px solid #8fc7a8;border-radius:0 .65rem .65rem 0;background:#17251f;color:#9fae9f;font-size:.78rem;line-height:1.45}
+  .prompt b{display:block;margin-bottom:.25rem;color:#8fc7a8;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase}.prompt q{quotes:none}
+  .open{margin-top:auto;color:#c9dd67;font-size:.8rem;font-weight:900}
   code{background:#2a4336;padding:.15rem .35rem;border-radius:.25rem}
   .health{display:inline-block;margin-top:2rem;font-size:.8rem;font-weight:900;text-decoration:none}
 </style>
@@ -193,6 +268,8 @@ function renderIndex() {
       title: "Mini apps",
       intro: "Open a tiny shared app built for a group chat.",
       empty: "No mini apps yet. Ask Hermes to create one in the shared workspace.",
+      promptLabel: "Original prompt",
+      open: "Open app →",
       health: "Backend health ↗"
     },
     ja: {
@@ -201,6 +278,8 @@ function renderIndex() {
       title: "ミニアプリ",
       intro: "グループチャットから生まれた、小さな共有アプリを開いてみよう。",
       empty: "ミニアプリはまだありません。Hermesに共有ワークスペースで作成を頼んでください。",
+      promptLabel: "元のプロンプト",
+      open: "アプリを開く →",
       health: "バックエンドの状態 ↗"
     }
   };
@@ -208,6 +287,9 @@ function renderIndex() {
     document.documentElement.lang = locale;
     document.querySelectorAll("[data-i18n]").forEach((element) => {
       element.textContent = messages[locale][element.dataset.i18n];
+    });
+    document.querySelectorAll("[data-copy-en]").forEach((element) => {
+      element.textContent = element.dataset[locale === "ja" ? "copyJa" : "copyEn"];
     });
     document.querySelectorAll("[data-locale]").forEach((button) => {
       const active = button.dataset.locale === locale;

@@ -7,6 +7,22 @@ You build small, shareable web apps from requests received in Telegram.
 - Work only inside this `generated-apps` directory. Do not inspect unrelated folders, Photos, messages, credentials, or other personal files.
 - Choose a short lowercase kebab-case slug for each app, such as `dinner-wheel`.
 - Create each app at `./<slug>/index.html`.
+- Create `./<slug>/app.json` so the public hub can explain what was built. Use this schema:
+  ```json
+  {
+    "title": { "en": "App name", "ja": "アプリ名" },
+    "description": {
+      "en": "One short sentence describing what the group can do.",
+      "ja": "グループでできることを説明する短い一文。"
+    },
+    "prompt": {
+      "en": "The original user request, lightly cleaned up if needed.",
+      "ja": "元の依頼の日本語訳。"
+    },
+    "emoji": "✨"
+  }
+  ```
+- Preserve the intent of the original request in `prompt`, but remove secrets or personal information before publishing it.
 - Prefer one self-contained HTML file with embedded CSS and JavaScript. Do not install packages, start a development server, or require a build step.
 - Use relative asset paths so the app works below `/apps/<slug>/`.
 - Make every app mobile-friendly and polished enough to demo.
@@ -28,7 +44,7 @@ For a dinner wheel specifically, let people vote for cuisine choices, show the s
 
 ## Completion
 
-- Verify that `./<slug>/index.html` exists and contains a usable app before saying it is published.
+- Verify that `./<slug>/index.html` and `./<slug>/app.json` exist and describe a usable app before saying it is published.
 - The public URL is:
   `https://kaycee-soundable-unappeasingly.ngrok-free.dev/apps/<slug>/`
 - In the final Telegram response, give the app name, a one-sentence summary, and the complete clickable public URL.
