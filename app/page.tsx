@@ -1,53 +1,220 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Demo = "wheel" | "slots" | "bracket";
+type Locale = "en" | "ja";
 
-const demoCopy: Record<
-  Demo,
-  {
-    tab: string;
-    author: string;
-    prompt: string;
-    reply?: string;
-    title: string;
-    subtitle: string;
-    icon: string;
-    after: string;
-  }
-> = {
-  wheel: {
-    tab: "dinner wheel",
-    author: "Alec",
-    prompt: "@fort make us a wheel to pick dinner for next month’s visit",
-    reply: "everyone adds 2 spots. derek gets 1",
-    title: "DinnerWheel",
-    subtitle: "built for this chat · tap to open",
-    icon: "🎡",
-    after: "wings is a cuisine",
+const copy = {
+  en: {
+    navHow: "how it works",
+    language: "Language",
+    eyebrow: "Robotz Rules Game Studio presents",
+    heroLine1: "Your group chat",
+    heroLine2: "builds apps.",
+    heroBody: (
+      <>
+        Add <strong>@fort</strong> to the chat. The group riffs on an idea; Hermes turns it
+        into a tiny shared app and drops the link back into the thread.
+      </>
+    ),
+    tryDemo: "try the working demo",
+    hackathon: "3-hour hackathon build",
+    runtime: "Agent runtime",
+    noAdults: "no adults allowed",
+    pitchEyebrow: "The pitch, in one tap",
+    pitchTitle: <>It starts as a joke.<br />It ends as a link.</>,
+    pitchBody: "The phone works. Choose a group idea, open the app card, and use what the fort built.",
+    howEyebrow: "How the hackathon MVP works",
+    howTitle: <>One small loop.<br />That’s the whole magic trick.</>,
+    howBody:
+      "Hermes supplies the multi-platform gateway, memory, terminal, and skills. Blanket Fort supplies the opinionated builder skill and the cozy group experience.",
+    steps: [
+      ["Group asks", "A message tags @fort in Telegram or Discord."],
+      ["Hermes routes", "The gateway hands context to the tiny-app builder skill."],
+      ["Fort builds", "A safe template is filled, published, and given a short URL."],
+      ["Link returns", "Everyone uses the same app, right from the thread."],
+    ],
+    buildToday: "Build this today",
+    shipSlice: "Ship one believable vertical slice.",
+    scope: [
+      ["0:00–0:35", "Hermes gateway + one chat channel"],
+      ["0:35–1:35", "one dinner-wheel builder skill"],
+      ["1:35–2:20", "publish link + message reply"],
+      ["2:20–3:00", "rehearse, record fallback, polish"],
+    ],
+    whyLead: "Most AI app builders start with a blank prompt box.",
+    whyTitle: <>Blanket Fort starts with<br /><em>your friends.</em></>,
+    climb: "climb into the fort",
+    footer: "a Robotz Rules Game Studio hackathon project · powered by Hermes Agent",
+    demoTabsLabel: "Example group apps",
+    builderReply: <>On it. Hermes is handing this to the <strong>tiny-app builder</strong>.</>,
+    tapCard: "tap the app card ↑",
+    appReady: "is up in the fort",
+    builtBy: "built by @fort · powered by Hermes Agent",
+    close: "Close",
+    demos: {
+      wheel: {
+        tab: "dinner wheel",
+        author: "Alec",
+        prompt: "@fort make us a wheel to pick dinner for next month’s visit",
+        reply: "everyone adds 2 spots. derek gets 1",
+        title: "DinnerWheel",
+        subtitle: "built for this chat · tap to open",
+        icon: "🎡",
+        after: "wings is a cuisine",
+        detail: "7 spots · Derek capped at 1",
+      },
+      slots: {
+        tab: "game night",
+        author: "Justin",
+        prompt: "@fort find us a game night. 4 cities, 4 time zones, good luck",
+        title: "SlotGrid",
+        subtitle: "3 of 4 have voted · tap to open",
+        icon: "🗓️",
+        after: "if it picks 5am my time again I’m suing the fort",
+        detail: "times shown in your zone",
+      },
+      bracket: {
+        tab: "bracket",
+        author: "Derek",
+        prompt: "@fort march madness pool. loser buys the group jerseys",
+        title: "BracketBowl",
+        subtitle: "make your picks · tap to open",
+        icon: "🏀",
+        after: "jersey budget says pick with your heart derek",
+        detail: "loser buys jerseys",
+      },
+    },
+    wheel: {
+      items: ["thai", "sushi", "bibimbap", "ramen", "tacos", "pizza", "wings"],
+      spinning: "spinning…",
+      again: "spin again",
+      spin: "spin",
+      wings: "Derek. Of course.",
+      spoken: "The fort has spoken.",
+      empty: "Winner buys nothing. Loser is Derek, probably.",
+    },
+    slots: {
+      days: ["Thu", "Fri", "Sat", "Sun"],
+      times: ["7 pm", "9 pm", "11 pm"],
+      freeLabel: "free",
+      allFree: "all 4 free — invite ready.",
+      tap: "free — tap your slots.",
+    },
+    bracket: {
+      semifinals: "semifinals · tap your picks",
+      championship: "championship",
+      winner: "winner",
+      live: "your picks are live in the chat.",
+      lock: "Picks lock at tipoff.",
+    },
   },
-  slots: {
-    tab: "game night",
-    author: "Justin",
-    prompt: "@fort find us a game night. 4 cities, 4 time zones, good luck",
-    title: "SlotGrid",
-    subtitle: "3 of 4 have voted · tap to open",
-    icon: "🗓️",
-    after: "if it picks 5am my time again I’m suing the fort",
+  ja: {
+    navHow: "仕組み",
+    language: "言語",
+    eyebrow: "Robotz Rules Game Studio presents",
+    heroLine1: "グループチャットが",
+    heroLine2: "アプリをつくる。",
+    heroBody: (
+      <>
+        チャットに<strong>@fort</strong>を追加。みんなのアイデアやノリをHermesが小さな共有アプリにして、リンクをスレッドへ届けます。
+      </>
+    ),
+    tryDemo: "デモを試す",
+    hackathon: "3時間ハッカソン作品",
+    runtime: "エージェント基盤",
+    noAdults: "大人は立入禁止",
+    pitchEyebrow: "ワンタップでわかる体験",
+    pitchTitle: <>冗談から始まり、<br />リンクになって届く。</>,
+    pitchBody: "実際に動きます。グループのアイデアを選び、アプリカードを開いて、Fortがつくったものを試してください。",
+    howEyebrow: "ハッカソンMVPの仕組み",
+    howTitle: <>小さなループがひとつ。<br />魔法はそれだけ。</>,
+    howBody:
+      "Hermesがマルチプラットフォームのゲートウェイ、記憶、ターミナル、スキルを提供。Blanket Fortがグループ向けのビルダー体験を加えます。",
+    steps: [
+      ["グループが頼む", "TelegramやDiscordで@fortをメンションします。"],
+      ["Hermesがつなぐ", "会話の文脈をミニアプリ・ビルダーへ渡します。"],
+      ["Fortがつくる", "安全なテンプレートを仕上げ、公開URLを発行します。"],
+      ["リンクが届く", "チャットのみんなが同じアプリをすぐ使えます。"],
+    ],
+    buildToday: "今日つくるもの",
+    shipSlice: "信じられる一つの体験を完成させる。",
+    scope: [
+      ["0:00–0:35", "Hermesゲートウェイ＋チャット接続"],
+      ["0:35–1:35", "夕食ルーレットのビルダースキル"],
+      ["1:35–2:20", "リンク公開＋チャットへ返信"],
+      ["2:20–3:00", "デモ練習、予備録画、仕上げ"],
+    ],
+    whyLead: "多くのAIアプリビルダーは、空のプロンプト欄から始まります。",
+    whyTitle: <>Blanket Fortは<br /><em>友だちから始まる。</em></>,
+    climb: "Fortに入ってみる",
+    footer: "Robotz Rules Game Studioのハッカソンプロジェクト · powered by Hermes Agent",
+    demoTabsLabel: "グループアプリの例",
+    builderReply: <>了解。Hermesが<strong>ミニアプリ・ビルダー</strong>に渡しています。</>,
+    tapCard: "アプリカードをタップ ↑",
+    appReady: "がFortに完成",
+    builtBy: "@fortが作成 · powered by Hermes Agent",
+    close: "閉じる",
+    demos: {
+      wheel: {
+        tab: "夕食ルーレット",
+        author: "Alec",
+        prompt: "@fort 来月みんなで会う日の夕食を決めるルーレットを作って",
+        reply: "一人2候補。Derekだけ1候補ね",
+        title: "DinnerWheel",
+        subtitle: "このチャット用に完成 · タップして開く",
+        icon: "🎡",
+        after: "手羽先も料理ジャンルです",
+        detail: "7候補 · Derekは1つまで",
+      },
+      slots: {
+        tab: "ゲームナイト",
+        author: "Justin",
+        prompt: "@fort 4都市・4タイムゾーンでゲームナイトの時間を見つけて",
+        title: "SlotGrid",
+        subtitle: "4人中3人が回答済み · タップして開く",
+        icon: "🗓️",
+        after: "また朝5時になったらFortを訴える",
+        detail: "あなたの時間帯で表示",
+      },
+      bracket: {
+        tab: "トーナメント",
+        author: "Derek",
+        prompt: "@fort バスケの勝ち上がり予想。最下位が全員のユニフォーム代",
+        title: "BracketBowl",
+        subtitle: "予想を選ぶ · タップして開く",
+        icon: "🏀",
+        after: "予算よりハートで選べ、Derek",
+        detail: "最下位がユニフォーム代",
+      },
+    },
+    wheel: {
+      items: ["タイ料理", "寿司", "ビビンバ", "ラーメン", "タコス", "ピザ", "手羽先"],
+      spinning: "回転中…",
+      again: "もう一度",
+      spin: "回す",
+      wings: "やっぱりDerek。",
+      spoken: "Fortのお告げです。",
+      empty: "勝者のおごりはなし。たぶん敗者はDerek。",
+    },
+    slots: {
+      days: ["木", "金", "土", "日"],
+      times: ["19時", "21時", "23時"],
+      freeLabel: "参加可能",
+      allFree: "4人全員OK — 招待できます。",
+      tap: "人OK — 空いている枠をタップ。",
+    },
+    bracket: {
+      semifinals: "準決勝 · 勝つチームをタップ",
+      championship: "決勝",
+      winner: "勝者",
+      live: "予想をチャットに反映しました。",
+      lock: "試合開始で締め切ります。",
+    },
   },
-  bracket: {
-    tab: "bracket",
-    author: "Derek",
-    prompt: "@fort march madness pool. loser buys the group jerseys",
-    title: "BracketBowl",
-    subtitle: "make your picks · tap to open",
-    icon: "🏀",
-    after: "jersey budget says pick with your heart derek",
-  },
-};
+} as const;
 
-const wheelItems = ["thai", "sushi", "bibimbap", "ramen", "tacos", "pizza", "wings"];
 const slotSeed = [
   [1, 2, 1, 2],
   [2, 3, 1, 2],
@@ -64,16 +231,17 @@ function StringLights() {
   );
 }
 
-function DinnerWheel() {
+function DinnerWheel({ locale }: { locale: Locale }) {
+  const t = copy[locale].wheel;
   const [rotation, setRotation] = useState(0);
-  const [winner, setWinner] = useState<string | null>(null);
+  const [winner, setWinner] = useState<number | null>(null);
   const [spinning, setSpinning] = useState(false);
 
   function spin() {
     if (spinning) return;
     setSpinning(true);
     setWinner(null);
-    const next = wheelItems[Math.floor(Math.random() * wheelItems.length)];
+    const next = Math.floor(Math.random() * t.items.length);
     setRotation((value) => value + 1440 + Math.floor(Math.random() * 280));
     window.setTimeout(() => {
       setWinner(next);
@@ -86,11 +254,11 @@ function DinnerWheel() {
       <div className="wheel-wrap">
         <span className="wheel-pointer" />
         <div className="wheel" style={{ transform: `rotate(${rotation}deg)` }}>
-          {wheelItems.map((item, index) => (
+          {t.items.map((item, index) => (
             <span
               className="wheel-label"
               key={item}
-              style={{ transform: `rotate(${index * (360 / wheelItems.length)}deg)` }}
+              style={{ transform: `rotate(${index * (360 / t.items.length)}deg)` }}
             >
               {item}
             </span>
@@ -99,28 +267,27 @@ function DinnerWheel() {
         <span className="wheel-hub">🍜</span>
       </div>
       <button className="primary-action" onClick={spin} disabled={spinning}>
-        {spinning ? "spinning…" : winner ? "spin again" : "spin"}
+        {spinning ? t.spinning : winner !== null ? t.again : t.spin}
       </button>
       <p className="app-result" aria-live="polite">
-        {winner ? (
+        {winner !== null ? (
           <>
-            <strong>{winner}</strong>
-            {winner === "wings" ? "Derek. Of course." : "The fort has spoken."}
+            <strong>{t.items[winner]}</strong>
+            {winner === t.items.length - 1 ? t.wings : t.spoken}
           </>
         ) : (
-          "Winner buys nothing. Loser is Derek, probably."
+          t.empty
         )}
       </p>
     </div>
   );
 }
 
-function SlotGrid() {
+function SlotGrid({ locale }: { locale: Locale }) {
+  const t = copy[locale].slots;
   const [mine, setMine] = useState(() =>
     Array.from({ length: 3 }, () => Array.from({ length: 4 }, () => false)),
   );
-  const days = ["Thu", "Fri", "Sat", "Sun"];
-  const times = ["7 pm", "9 pm", "11 pm"];
   const best = useMemo(() => {
     let current = { count: -1, row: 0, column: 0 };
     slotSeed.forEach((row, rowIndex) =>
@@ -146,13 +313,11 @@ function SlotGrid() {
     <div className="mini-app-body slot-body">
       <div className="slot-grid">
         <span />
-        {days.map((day) => (
-          <b key={day}>{day}</b>
-        ))}
-        {times.map((time, row) => (
+        {t.days.map((day) => <b key={day}>{day}</b>)}
+        {t.times.map((time, row) => (
           <div className="slot-row" key={time}>
             <span>{time}</span>
-            {days.map((day, column) => {
+            {t.days.map((day, column) => {
               const count = slotSeed[row][column] + (mine[row][column] ? 1 : 0);
               return (
                 <button
@@ -160,7 +325,7 @@ function SlotGrid() {
                   data-count={count}
                   key={day}
                   onClick={() => toggle(row, column)}
-                  aria-label={`${day} ${time}, ${count} of 4 free`}
+                  aria-label={`${day} ${time}, ${count}/4 ${t.freeLabel}`}
                 >
                   {count}/4
                 </button>
@@ -170,26 +335,22 @@ function SlotGrid() {
         ))}
       </div>
       <p className="app-result">
-        <strong>
-          {days[best.column]} {times[best.row]}
-        </strong>
-        {best.count === 4 ? "all 4 free — invite ready." : `${best.count}/4 free — tap your slots.`}
+        <strong>{t.days[best.column]} {t.times[best.row]}</strong>
+        {best.count === 4 ? t.allFree : `${best.count}/4 ${t.tap}`}
       </p>
     </div>
   );
 }
 
-function Bracket() {
+function Bracket({ locale }: { locale: Locale }) {
+  const t = copy[locale].bracket;
   const [semis, setSemis] = useState<(string | null)[]>([null, null]);
   const [champion, setChampion] = useState<string | null>(null);
-  const pairs = [
-    ["UConn", "Gonzaga"],
-    ["Houston", "Duke"],
-  ];
+  const pairs = [["UConn", "Gonzaga"], ["Houston", "Duke"]];
 
   return (
     <div className="mini-app-body bracket-body">
-      <p className="round-label">semifinals · tap your picks</p>
+      <p className="round-label">{t.semifinals}</p>
       {pairs.map((pair, index) => (
         <div className="team-pair" key={pair[0]}>
           {pair.map((team) => (
@@ -206,7 +367,7 @@ function Bracket() {
           ))}
         </div>
       ))}
-      <p className="round-label">championship</p>
+      <p className="round-label">{t.championship}</p>
       <div className="team-pair">
         {semis.map((team, index) => (
           <button
@@ -215,32 +376,27 @@ function Bracket() {
             className={champion === team ? "picked" : ""}
             onClick={() => setChampion(team)}
           >
-            {team ?? `winner ${index + 1}`}
+            {team ?? `${t.winner} ${index + 1}`}
           </button>
         ))}
       </div>
       <p className="app-result">
-        {champion ? (
-          <>
-            <strong>🏆 {champion}</strong>your picks are live in the chat.
-          </>
-        ) : (
-          "Picks lock at tipoff."
-        )}
+        {champion ? <><strong>🏆 {champion}</strong>{t.live}</> : t.lock}
       </p>
     </div>
   );
 }
 
-function PhoneDemo() {
+function PhoneDemo({ locale }: { locale: Locale }) {
+  const t = copy[locale];
   const [demo, setDemo] = useState<Demo>("wheel");
   const [open, setOpen] = useState(false);
-  const copy = demoCopy[demo];
+  const demoCopy = t.demos[demo];
 
   return (
     <div className="demo-column">
-      <div className="demo-tabs" role="tablist" aria-label="Example group apps">
-        {(Object.keys(demoCopy) as Demo[]).map((key) => (
+      <div className="demo-tabs" role="tablist" aria-label={t.demoTabsLabel}>
+        {(Object.keys(t.demos) as Demo[]).map((key) => (
           <button
             key={key}
             role="tab"
@@ -251,7 +407,7 @@ function PhoneDemo() {
               setOpen(false);
             }}
           >
-            {demoCopy[key].tab}
+            {t.demos[key].tab}
           </button>
         ))}
       </div>
@@ -266,44 +422,44 @@ function PhoneDemo() {
             </div>
           </div>
           <div className="thread">
-            <span className="sender right">{copy.author}</span>
-            <p className="bubble mine">{copy.prompt}</p>
-            {copy.reply && <p className="bubble mine compact">{copy.reply}</p>}
+            <span className="sender right">{demoCopy.author}</span>
+            <p className="bubble mine">{demoCopy.prompt}</p>
+            {"reply" in demoCopy && demoCopy.reply && (
+              <p className="bubble mine compact">{demoCopy.reply}</p>
+            )}
             <span className="sender">Blanket Fort</span>
-            <p className="bubble fort">
-              On it. Hermes is handing this to the <strong>tiny-app builder</strong>.
-            </p>
+            <p className="bubble fort">{t.builderReply}</p>
             <button className="app-link" onClick={() => setOpen(true)}>
-              <span>{copy.icon}</span>
+              <span>{demoCopy.icon}</span>
               <span>
-                <strong>{copy.title} is up in the fort</strong>
-                <small>{copy.subtitle}</small>
+                <strong>{demoCopy.title} {t.appReady}</strong>
+                <small>{demoCopy.subtitle}</small>
               </span>
               <b>›</b>
             </button>
-            <span className="tap-note">tap the app card ↑</span>
+            <span className="tap-note">{t.tapCard}</span>
             <span className="sender right">{demo === "wheel" ? "Derek" : "Seb"}</span>
-            <p className="bubble mine compact">{copy.after}</p>
+            <p className="bubble mine compact">{demoCopy.after}</p>
           </div>
 
           <div className={`mini-app ${open ? "open" : ""}`} aria-hidden={!open}>
             <div className="mini-app-header">
               <div>
-                <strong>{copy.title}</strong>
-                <span>
-                  {demo === "wheel"
-                    ? "7 spots · Derek capped at 1"
-                    : demo === "slots"
-                      ? "times shown in your zone"
-                      : "loser buys jerseys"}
-                </span>
+                <strong>{demoCopy.title}</strong>
+                <span>{demoCopy.detail}</span>
               </div>
-              <button onClick={() => setOpen(false)} aria-label={`Close ${copy.title}`}>
+              <button onClick={() => setOpen(false)} aria-label={`${t.close} ${demoCopy.title}`}>
                 ×
               </button>
             </div>
-            {demo === "wheel" ? <DinnerWheel /> : demo === "slots" ? <SlotGrid /> : <Bracket />}
-            <small className="built-by">built by @fort · powered by Hermes Agent</small>
+            {demo === "wheel" ? (
+              <DinnerWheel locale={locale} />
+            ) : demo === "slots" ? (
+              <SlotGrid locale={locale} />
+            ) : (
+              <Bracket locale={locale} />
+            )}
+            <small className="built-by">{t.builtBy}</small>
           </div>
         </div>
       </div>
@@ -311,7 +467,55 @@ function PhoneDemo() {
   );
 }
 
+function LanguageSwitcher({
+  locale,
+  setLocale,
+}: {
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
+}) {
+  return (
+    <div className="language-switcher" role="group" aria-label={copy[locale].language}>
+      <button
+        className={locale === "ja" ? "active" : ""}
+        aria-pressed={locale === "ja"}
+        onClick={() => setLocale("ja")}
+        lang="ja"
+      >
+        日本語
+      </button>
+      <span aria-hidden="true">/</span>
+      <button
+        className={locale === "en" ? "active" : ""}
+        aria-pressed={locale === "en"}
+        onClick={() => setLocale("en")}
+        lang="en"
+      >
+        EN
+      </button>
+    </div>
+  );
+}
+
 export default function Home() {
+  const [locale, setLocaleState] = useState<Locale>("en");
+  const t = copy[locale];
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem("blanket-fort-locale");
+    const deviceLocale: Locale = navigator.language.toLowerCase().startsWith("ja") ? "ja" : "en";
+    setLocaleState(saved === "ja" || saved === "en" ? saved : deviceLocale);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
+  function setLocale(next: Locale) {
+    setLocaleState(next);
+    window.localStorage.setItem("blanket-fort-locale", next);
+  }
+
   return (
     <main>
       <StringLights />
@@ -319,33 +523,27 @@ export default function Home() {
         <a className="wordmark" href="#top" aria-label="Blanket Fort home">
           Blanket <span>Fort</span>
         </a>
-        <a className="nav-link" href="#how">
-          how it works
-        </a>
+        <div className="nav-actions">
+          <a className="nav-link" href="#how">{t.navHow}</a>
+          <LanguageSwitcher locale={locale} setLocale={setLocale} />
+        </div>
       </nav>
 
       <section className="hero" id="top">
         <div className="hero-copy">
-          <span className="eyebrow">Robotz Rules Game Studio presents</span>
+          <span className="eyebrow">{t.eyebrow}</span>
           <h1>
-            Your group chat
+            {t.heroLine1}
             <br />
-            <em>builds apps.</em>
+            <em>{t.heroLine2}</em>
           </h1>
-          <p>
-            Add <strong>@fort</strong> to the chat. The group riffs on an idea; Hermes turns it
-            into a tiny shared app and drops the link back into the thread.
-          </p>
+          <p>{t.heroBody}</p>
           <div className="hero-actions">
-            <a className="cta" href="#demo">
-              try the working demo <span>↓</span>
-            </a>
-            <span className="status-pill">
-              <i /> 3-hour hackathon build
-            </span>
+            <a className="cta" href="#demo">{t.tryDemo} <span>↓</span></a>
+            <span className="status-pill"><i /> {t.hackathon}</span>
           </div>
           <div className="powered">
-            <span>Agent runtime</span>
+            <span>{t.runtime}</span>
             <a href="https://hermes-agent.org" target="_blank" rel="noreferrer">
               Hermes Agent ↗
             </a>
@@ -355,79 +553,59 @@ export default function Home() {
           <span className="roof roof-left" />
           <span className="roof roof-right" />
           <span className="door">BF</span>
-          <small>no adults allowed</small>
+          <small>{t.noAdults}</small>
         </div>
       </section>
 
       <section className="demo-section" id="demo">
         <div className="section-intro">
-          <span className="eyebrow">The pitch, in one tap</span>
-          <h2>It starts as a joke.<br />It ends as a link.</h2>
-          <p>The phone works. Choose a group idea, open the app card, and use what the fort built.</p>
+          <span className="eyebrow">{t.pitchEyebrow}</span>
+          <h2>{t.pitchTitle}</h2>
+          <p>{t.pitchBody}</p>
         </div>
-        <PhoneDemo />
+        <PhoneDemo locale={locale} />
       </section>
 
       <section className="how-section" id="how">
         <div className="section-intro">
-          <span className="eyebrow">How the hackathon MVP works</span>
-          <h2>One small loop.<br />That’s the whole magic trick.</h2>
-          <p>
-            Hermes supplies the multi-platform gateway, memory, terminal, and skills. Blanket
-            Fort supplies the opinionated builder skill and the cozy group experience.
-          </p>
+          <span className="eyebrow">{t.howEyebrow}</span>
+          <h2>{t.howTitle}</h2>
+          <p>{t.howBody}</p>
         </div>
         <div className="flow">
-          <article>
-            <span>01</span>
-            <div className="flow-icon">💬</div>
-            <h3>Group asks</h3>
-            <p>A message tags @fort in Telegram or Discord.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <div className="flow-icon">⚙️</div>
-            <h3>Hermes routes</h3>
-            <p>The gateway hands context to the tiny-app builder skill.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <div className="flow-icon">✦</div>
-            <h3>Fort builds</h3>
-            <p>A safe template is filled, published, and given a short URL.</p>
-          </article>
-          <article>
-            <span>04</span>
-            <div className="flow-icon">🔗</div>
-            <h3>Link returns</h3>
-            <p>Everyone uses the same app, right from the thread.</p>
-          </article>
+          {t.steps.map(([title, description], index) => (
+            <article key={title}>
+              <span>0{index + 1}</span>
+              <div className="flow-icon">{["💬", "⚙️", "✦", "🔗"][index]}</div>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
         </div>
         <div className="scope-card">
           <div>
-            <span className="eyebrow">Build this today</span>
-            <h3>Ship one believable vertical slice.</h3>
+            <span className="eyebrow">{t.buildToday}</span>
+            <h3>{t.shipSlice}</h3>
           </div>
           <ul>
-            <li><b>0:00–0:35</b> Hermes gateway + one chat channel</li>
-            <li><b>0:35–1:35</b> one dinner-wheel builder skill</li>
-            <li><b>1:35–2:20</b> publish link + message reply</li>
-            <li><b>2:20–3:00</b> rehearse, record fallback, polish</li>
+            {t.scope.map(([time, description]) => (
+              <li key={time}><b>{time}</b> {description}</li>
+            ))}
           </ul>
         </div>
       </section>
 
       <section className="why-section">
-        <p>Most AI app builders start with a blank prompt box.</p>
-        <h2>Blanket Fort starts with<br /><em>your friends.</em></h2>
-        <a className="cta" href="#demo">climb into the fort ↑</a>
+        <p>{t.whyLead}</p>
+        <h2>{t.whyTitle}</h2>
+        <a className="cta" href="#demo">{t.climb} ↑</a>
       </section>
 
       <footer>
         <StringLights />
         <div>
           <span className="wordmark">Blanket <b>Fort</b></span>
-          <p>a Robotz Rules Game Studio hackathon project · powered by Hermes Agent</p>
+          <p>{t.footer}</p>
         </div>
       </footer>
     </main>

@@ -127,6 +127,57 @@ main {
   font-weight: 700;
 }
 
+.nav-actions,
+.language-switcher {
+  display: flex;
+  align-items: center;
+}
+
+.nav-actions {
+  gap: 22px;
+}
+
+.language-switcher {
+  gap: 6px;
+  color: #71857a;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.language-switcher button {
+  padding: 5px 3px;
+  border: 0;
+  background: transparent;
+  color: #71857a;
+  cursor: pointer;
+}
+
+.language-switcher button:hover,
+.language-switcher button.active {
+  color: var(--lime);
+}
+
+.language-switcher button:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+html[lang="ja"] body {
+  font-family: var(--font-sans), "Hiragino Sans", "Yu Gothic", "Noto Sans JP", system-ui, sans-serif;
+}
+
+html[lang="ja"] h1,
+html[lang="ja"] h2,
+html[lang="ja"] h3 {
+  letter-spacing: -0.035em;
+}
+
+html[lang="ja"] h1 {
+  line-height: 1.03;
+}
+
 .hero {
   width: min(1120px, calc(100% - 40px));
   min-height: 610px;
@@ -971,10 +1022,15 @@ footer p {
 @media (max-width: 560px) {
   .nav {
     width: calc(100% - 30px);
+    align-items: flex-start;
   }
 
   .nav-link {
     display: none;
+  }
+
+  .nav-actions {
+    gap: 0;
   }
 
   .hero,
