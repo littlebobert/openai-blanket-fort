@@ -70,17 +70,20 @@ Create a **Fort** application in the Discord Developer Portal, enable the
 Server Members and Message Content privileged gateway intents, and install its
 bot with the `bot` and `applications.commands` scopes. Limit permissions to
 View Channels, Send Messages, Embed Links, Attach Files, Read Message History,
-Send Messages in Threads, and Add Reactions.
+Create Public Threads, Send Messages in Threads, and Add Reactions.
 
 Set these as Railway secrets:
 
 - `DISCORD_BOT_TOKEN` — the bot credential;
-- `DISCORD_ALLOWED_USERS` — comma-separated authorized user IDs;
+- `DISCORD_ALLOWED_USERS` — optional comma-separated authorized user IDs;
+- `DISCORD_ALLOWED_ROLES` — recommended comma-separated Tester/Builder role IDs;
 - `DISCORD_ALLOWED_CHANNELS` — comma-separated private build-channel IDs.
 
-The startup script defaults Discord to mention-only, rejects allow-all access
-and bot-authored requests, creates one thread per request, and suppresses
-progress reactions. Do not set `DISCORD_ALLOW_ALL_USERS=true` for this
+User and role allowlists use OR semantics. Keep Server Members Intent enabled
+for role authorization. The startup script defaults Discord to mention-only,
+rejects allow-all access and bot-authored requests, creates one thread per
+request, and uses quiet reactions as accepted-request receipts while suppressing
+verbose progress narration. Do not set `DISCORD_ALLOW_ALL_USERS=true` for this
 prototype. Keep the bot token out of Git, generated apps, logs, screenshots,
 and chat. If exposed, reset it in the Developer Portal and replace the Railway
 secret immediately.

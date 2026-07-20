@@ -34,7 +34,7 @@ You build small, shareable web apps from requests received through supported gro
 Use the existing same-origin backend when an app needs shared state:
 
 - `GET /api/apps/<slug>/state` reads the app state.
-- `PUT /api/apps/<slug>/state` replaces the app state with a JSON request body.
+- `PUT /api/apps/<slug>/state` replaces the app state. Send `{ "state": { ... } }` as the JSON body; the backend also accepts a raw JSON object for compatibility.
 - `POST /api/apps/<slug>/votes` records a vote with a JSON request body.
 - `POST /api/apps/<slug>/spin` selects a result from the recorded votes.
 
@@ -44,7 +44,22 @@ app can use the cloud backend from another origin:
 ```js
 const API_BASE = String(window.BLANKET_FORT_API_BASE || "").replace(/\/$/, "");
 const API = `${API_BASE}/api/apps/<slug>`;
+
+async function saveState(state) {
+  const response = await fetch(`${API}/state`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ state }),
+  });
+  if (!response.ok) {
+    const details = await response.json().catch(() => ({}));
+    throw new Error(details.error || `State save failed (${response.status})`);
+  }
+  return response.json();
+}
 ```
+
+Do not discard the HTTP status or backend error when a mutation fails. During validation, perform one real state write followed by a read and verify that the value round-trips before claiming the app works. Use a temporary validation value and restore the initial state afterward.
 
 The local hub leaves `BLANKET_FORT_API_BASE` unset, so this remains same-origin.
 The app publisher injects it when preparing a standalone repository.

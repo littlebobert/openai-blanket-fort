@@ -60,7 +60,10 @@ test("Hermes startup keeps Telegram and Discord quiet and private", async () => 
   assert.match(startup, /DISCORD_IGNORE_NO_MENTION.*true/);
   assert.match(startup, /DISCORD_ALLOW_BOTS.*none/);
   assert.match(startup, /DISCORD_AUTO_THREAD.*true/);
-  assert.match(startup, /DISCORD_REACTIONS.*false/);
+  assert.match(startup, /DISCORD_REACTIONS.*true/);
+  assert.match(startup, /DISCORD_ALLOWED_ROLES/);
+  assert.match(startup, /no allowed users or roles/);
+  assert.match(startup, /MINIAPPS_ROOT.*REPO_ROOT.*generated-apps/);
   assert.doesNotMatch(startup, /DISCORD_BOT_TOKEN=/);
   assert.match(contract, /Telegram and Discord/);
   assert.match(contract, /final chat response/);

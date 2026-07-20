@@ -370,10 +370,16 @@ async function handleApi(request, response, url) {
 
   if (resource === "state" && request.method === "PUT") {
     const body = await readJson(request);
-    if (!body.state || typeof body.state !== "object" || Array.isArray(body.state)) {
-      return sendJson(response, 400, { error: "Expected a JSON object in state" });
+    const nextState =
+      body.state && typeof body.state === "object" && !Array.isArray(body.state)
+        ? body.state
+        : body;
+    if (!nextState || typeof nextState !== "object" || Array.isArray(nextState)) {
+      return sendJson(response, 400, {
+        error: "Expected a JSON state object or an object containing state",
+      });
     }
-    record.state = body.state;
+    record.state = nextState;
     record.updatedAt = new Date().toISOString();
     saveDatabase();
     return sendJson(response, 200, publicState(slug, record));

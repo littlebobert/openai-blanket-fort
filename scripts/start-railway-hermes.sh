@@ -8,6 +8,7 @@ REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
 HERMES_BIN="${HERMES_BIN:-/opt/hermes/bin/hermes}"
 NODE_BIN="${NODE_BIN:-/usr/local/bin/node}"
 MINIAPPS_SERVER="${MINIAPPS_SERVER:-${REPO_ROOT}/miniapps/server.mjs}"
+export MINIAPPS_ROOT="${MINIAPPS_ROOT:-${REPO_ROOT}/generated-apps}"
 
 if [[ ! -x "${HERMES_BIN}" ]]; then
   echo "Hermes executable not found: ${HERMES_BIN}" >&2
@@ -48,7 +49,15 @@ export DISCORD_REQUIRE_MENTION="${DISCORD_REQUIRE_MENTION:-true}"
 export DISCORD_IGNORE_NO_MENTION="${DISCORD_IGNORE_NO_MENTION:-true}"
 export DISCORD_ALLOW_BOTS="${DISCORD_ALLOW_BOTS:-none}"
 export DISCORD_AUTO_THREAD="${DISCORD_AUTO_THREAD:-true}"
-export DISCORD_REACTIONS="${DISCORD_REACTIONS:-false}"
+# Reactions provide a quiet, immediate receipt without restoring verbose tool updates.
+export DISCORD_REACTIONS="${DISCORD_REACTIONS:-true}"
+
+if [[ -z "${DISCORD_ALLOWED_USERS:-}" && -z "${DISCORD_ALLOWED_ROLES:-}" ]]; then
+  echo "Warning: Discord has no allowed users or roles; user requests may be denied." >&2
+fi
+if [[ -z "${DISCORD_ALLOWED_CHANNELS:-}" ]]; then
+  echo "Warning: Discord has no allowed channels configured." >&2
+fi
 
 "${NODE_BIN}" "${MINIAPPS_SERVER}" &
 miniapps_pid=$!
