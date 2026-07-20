@@ -41,6 +41,9 @@ test("Hermes startup keeps Telegram and Discord quiet and private", async () => 
     readFile(new URL("../generated-apps/AGENTS.md", import.meta.url), "utf8"),
   ]);
 
+  assert.match(startup, /config set display\.tool_progress off/);
+  assert.match(startup, /config set display\.interim_assistant_messages false/);
+  assert.match(startup, /config set display\.show_commentary false/);
   assert.match(startup, /for platform in telegram discord/);
   for (const setting of [
     "tool_progress",

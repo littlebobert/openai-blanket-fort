@@ -24,9 +24,15 @@ if [[ ! -f "${MINIAPPS_SERVER}" ]]; then
   exit 1
 fi
 
-# Keep chat channels focused on the product experience. These writes are
+# Keep chat channels focused on the product experience. Set global fallbacks for
+# Hermes versions that do not consistently apply per-platform overrides, then
+# keep explicit channel settings for versions that do. These writes are
 # idempotent and live on Railway's persistent /opt/data volume, while applying
 # them on every boot also makes a fresh volume behave correctly.
+"${HERMES_BIN}" config set display.tool_progress off
+"${HERMES_BIN}" config set display.interim_assistant_messages false
+"${HERMES_BIN}" config set display.show_commentary false
+
 for platform in telegram discord; do
   "${HERMES_BIN}" config set "display.platforms.${platform}.tool_progress" off
   "${HERMES_BIN}" config set "display.platforms.${platform}.busy_ack_detail" false

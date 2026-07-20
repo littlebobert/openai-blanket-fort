@@ -267,10 +267,11 @@ volume at `/opt/data`, and starts the checked-out project with:
 bash /opt/data/workspaces/blanket-fort/scripts/start-railway-hermes.sh
 ```
 
-The startup script idempotently applies quiet Telegram and Discord output
-policies before starting the mini-app server and Hermes gateway. Redeploying
-the container therefore preserves the desired behavior, while a fresh volume
-receives the same configuration automatically.
+The startup script idempotently applies global quiet-output fallbacks plus
+Telegram and Discord overrides before starting the mini-app server and Hermes
+gateway. Redeploying the container therefore preserves the desired behavior,
+while a fresh volume receives the same configuration automatically. Manual
+`hermes config set` commands are not required after a clean deployment.
 
 ### Discord setup
 
