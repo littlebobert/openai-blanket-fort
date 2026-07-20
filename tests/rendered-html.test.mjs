@@ -86,7 +86,8 @@ test("landing page and mini-app hub support device-aware Japanese and English", 
   assert.match(page, /アプリをつくる/);
   assert.match(page, /毛布の秘密基地/);
   assert.match(page, /\/demo\/dinner-wheel/);
-  assert.match(page, /kaycee-soundable-unappeasingly\.ngrok-free\.dev/);
+  assert.match(page, /hermes-gateway-production-0aaf\.up\.railway\.app/);
+  assert.doesNotMatch(page, /ngrok-free\.dev/);
   assert.match(hub, /公開アプリハブ/);
   assert.match(hub, /ミニアプリ/);
   assert.match(hub, /毛布の秘密基地/);

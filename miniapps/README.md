@@ -6,11 +6,9 @@ Start the local service:
 npm run miniapps
 ```
 
-Expose it through the assigned ngrok domain:
-
-```bash
-ngrok http 8787 --url https://kaycee-soundable-unappeasingly.ngrok-free.dev
-```
+The production service is available at
+`https://hermes-gateway-production-0aaf.up.railway.app`. For temporary local
+sharing, start an ngrok tunnel against port `8787` and use the URL it assigns.
 
 Generated apps live at `generated-apps/<slug>/index.html` and are served at
 `/apps/<slug>/`.

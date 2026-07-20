@@ -537,7 +537,7 @@ export default function Home() {
           <a className="nav-link" href="#how">{t.navHow}</a>
           <a
             className="nav-link"
-            href="https://kaycee-soundable-unappeasingly.ngrok-free.dev/"
+            href="https://hermes-gateway-production-0aaf.up.railway.app/"
             target="_blank"
             rel="noreferrer"
           >

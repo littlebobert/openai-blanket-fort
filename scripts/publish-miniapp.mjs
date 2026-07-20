@@ -12,7 +12,7 @@ import { spawnSync } from "node:child_process";
 const ROOT = resolve(import.meta.dirname, "..");
 const DEFAULT_API_BASE =
   process.env.BLANKET_FORT_API_BASE ||
-  "https://kaycee-soundable-unappeasingly.ngrok-free.dev";
+  "https://hermes-gateway-production-0aaf.up.railway.app";
 const SLUG_PATTERN = /^[a-z0-9][a-z0-9-]{0,62}$/;
 
 function fail(message) {
