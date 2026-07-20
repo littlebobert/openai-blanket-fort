@@ -24,7 +24,7 @@ closer to how Hermes is documented to run.
 
 ## Production flow
 
-1. Telegram sends a request to the cloud-hosted Hermes gateway.
+1. Telegram or an allowlisted Discord `@Fort` mention sends a request to the cloud-hosted Hermes gateway.
 2. Blanket Fort creates a build job and immediately replies once with a
    job-specific monitoring URL.
 3. Hermes generates the app in a temporary, isolated workspace while internal
@@ -48,8 +48,8 @@ The two-message chat contract is:
 ## Reproducible Railway startup
 
 The versioned startup script at `scripts/start-railway-hermes.sh` reapplies the
-Telegram display policy on every boot, starts the mini-app server, and runs the
-Hermes gateway. Set the Railway service **Start Command** to:
+quiet Telegram and Discord display policies on every boot, starts the mini-app
+server, and runs the Hermes gateway. Set the Railway service **Start Command** to:
 
 ```bash
 bash /opt/data/workspaces/blanket-fort/scripts/start-railway-hermes.sh
@@ -60,6 +60,39 @@ The settings are also written to Hermes configuration on the persistent
 settings, while a replacement service or fresh volume receives the same
 configuration automatically. If either the mini-app server or gateway exits,
 the script exits so Railway can restart the complete service.
+
+## Discord gateway setup
+
+Discord uses Hermes's built-in gateway adapter and the existing Railway
+process. Do not add a webhook receiver or Discord SDK to the mini-app server.
+
+Create a **Fort** application in the Discord Developer Portal, enable the
+Server Members and Message Content privileged gateway intents, and install its
+bot with the `bot` and `applications.commands` scopes. Limit permissions to
+View Channels, Send Messages, Embed Links, Attach Files, Read Message History,
+Send Messages in Threads, and Add Reactions.
+
+Set these as Railway secrets:
+
+- `DISCORD_BOT_TOKEN` — the bot credential;
+- `DISCORD_ALLOWED_USERS` — comma-separated authorized user IDs;
+- `DISCORD_ALLOWED_CHANNELS` — comma-separated private build-channel IDs.
+
+The startup script defaults Discord to mention-only, rejects allow-all access
+and bot-authored requests, creates one thread per request, and suppresses
+progress reactions. Do not set `DISCORD_ALLOW_ALL_USERS=true` for this
+prototype. Keep the bot token out of Git, generated apps, logs, screenshots,
+and chat. If exposed, reset it in the Developer Portal and replace the Railway
+secret immediately.
+
+After deployment, verify `hermes gateway status`, then test all routing edges:
+an allowed user's `@Fort` request succeeds in an allowed channel; a message
+without the mention, an unlisted user, and an unlisted channel are ignored; the
+result contains one public app link without tool or validation narration; and
+Telegram still completes a request. The private prototype does not require
+Discord application review. Revisit verification, privacy/terms URLs, and
+privileged-intent justification before approaching Discord's large-bot server
+threshold.
 
 Publishing must be explicit: chat text can contain private names, locations, or
 inside jokes, so Hermes should show the proposed public title, description, and

@@ -24,14 +24,25 @@ if [[ ! -f "${MINIAPPS_SERVER}" ]]; then
   exit 1
 fi
 
-# Keep Telegram focused on the product experience. These writes are
+# Keep chat channels focused on the product experience. These writes are
 # idempotent and live on Railway's persistent /opt/data volume, while applying
 # them on every boot also makes a fresh volume behave correctly.
-"${HERMES_BIN}" config set display.platforms.telegram.tool_progress off
-"${HERMES_BIN}" config set display.platforms.telegram.busy_ack_detail false
-"${HERMES_BIN}" config set display.platforms.telegram.interim_assistant_messages false
-"${HERMES_BIN}" config set display.platforms.telegram.long_running_notifications false
-"${HERMES_BIN}" config set display.platforms.telegram.cleanup_progress true
+for platform in telegram discord; do
+  "${HERMES_BIN}" config set "display.platforms.${platform}.tool_progress" off
+  "${HERMES_BIN}" config set "display.platforms.${platform}.busy_ack_detail" false
+  "${HERMES_BIN}" config set "display.platforms.${platform}.interim_assistant_messages" false
+  "${HERMES_BIN}" config set "display.platforms.${platform}.long_running_notifications" false
+  "${HERMES_BIN}" config set "display.platforms.${platform}.cleanup_progress" true
+done
+
+# Discord stays closed by default even if a bot token is later attached. The
+# deployment supplies allowlisted user and channel IDs as Railway secrets.
+export DISCORD_ALLOW_ALL_USERS="${DISCORD_ALLOW_ALL_USERS:-false}"
+export DISCORD_REQUIRE_MENTION="${DISCORD_REQUIRE_MENTION:-true}"
+export DISCORD_IGNORE_NO_MENTION="${DISCORD_IGNORE_NO_MENTION:-true}"
+export DISCORD_ALLOW_BOTS="${DISCORD_ALLOW_BOTS:-none}"
+export DISCORD_AUTO_THREAD="${DISCORD_AUTO_THREAD:-true}"
+export DISCORD_REACTIONS="${DISCORD_REACTIONS:-false}"
 
 "${NODE_BIN}" "${MINIAPPS_SERVER}" &
 miniapps_pid=$!

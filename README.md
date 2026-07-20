@@ -5,13 +5,14 @@
 **Codex is an incredible app builder. Blanket Fort makes it multiplayer.**
 
 Blanket Fort lets non-technical friends create small, shared web apps from a
-conversation they are already having. A group sends a request in Telegram,
-[Hermes Agent](https://hermes-agent.org) brings it to Codex, and the finished
-app returns to the chat as a public link.
+conversation they are already having. A group sends a request in Telegram or
+Discord, [Hermes Agent](https://hermes-agent.org) brings it to Codex, and the
+finished app returns to the chat as a public link.
 
 The current prototype runs end to end in the cloud: Hermes, GPT-5.6 Sol, the
 Telegram gateway, generated apps, and their shared backend are hosted on
-Railway.
+Railway. The same gateway is configured for Discord once its deployment
+secrets are supplied.
 
 ![Blanket Fort social card](public/og.png)
 
@@ -74,7 +75,7 @@ Telegram and Hermes interaction model.
 ## Completed end-to-end flow
 
 ```text
-Natural-language Telegram request
+Natural-language Telegram or Discord request
     |
     v
 Hermes gateway on Railway
@@ -92,19 +93,19 @@ Validate the app and connect shared state when needed
 Serve it at a public Railway URL
     |
     v
-Return the finished app to Telegram
+Return the finished app to the originating chat
 ```
 
-The Telegram bot is currently an allowlisted prototype rather than an open
-public bot. Public visitors can use the generated apps, but strangers cannot
-spend the project’s model allowance or invoke its tool-capable agent.
+Chat bots are allowlisted prototypes rather than open public bots. Public
+visitors can use the generated apps, but strangers cannot spend the project’s
+model allowance or invoke its tool-capable agent.
 
 ## What is implemented
 
 - Hermes Agent v0.18.2 running continuously in its official Docker image on
   Railway.
 - GPT-5.6 Sol through OpenAI Codex OAuth.
-- A real Telegram bot connected to the cloud Hermes gateway.
+- A real Telegram bot and a Discord-ready Hermes gateway using the same cloud runtime.
 - A persistent Railway volume for Hermes authentication, configuration,
   sessions, generated apps, and shared app state.
 - A bounded `generated-apps/<slug>/` workspace governed by a tracked
@@ -119,10 +120,10 @@ spend the project’s model allowance or invoke its tool-capable agent.
   - general shared app state;
   - server-selected spin results;
   - generated-app discovery and static delivery.
-- A quiet Telegram configuration that keeps tool calls, validator output,
-  design audits, and retry details out of the group chat.
-- A reproducible Railway startup script that applies the Telegram display
-  policy and supervises both the Hermes gateway and mini-app server.
+- Quiet Telegram and Discord configuration that keeps tool calls, validator
+  output, design audits, and retry details out of group chat.
+- A reproducible Railway startup script that applies both channel display
+  policies and supervises the Hermes gateway and mini-app server.
 - A permanent, judge-safe DinnerWheel hosted with the landing page.
 
 ## Messaging experience
@@ -141,7 +142,7 @@ inside the agent.
 ## Architecture
 
 ```text
-Telegram
+Telegram or Discord
    |
    v
 Hermes Agent gateway -- OpenAI Codex / GPT-5.6 Sol
@@ -172,6 +173,8 @@ prototype small and makes the full loop independently accessible.
 ## Safety and scope
 
 - Telegram access is restricted with `TELEGRAM_ALLOWED_USERS`.
+- Discord requires an allowlisted user and channel plus an explicit `@Fort`
+  mention; allow-all access is disabled by default.
 - Hermes is instructed to work only inside `generated-apps/`.
 - Generated apps never contain API keys, bot tokens, or other secrets.
 - Apps are self-contained and cannot install arbitrary packages or expose their
@@ -264,7 +267,43 @@ volume at `/opt/data`, and starts the checked-out project with:
 bash /opt/data/workspaces/blanket-fort/scripts/start-railway-hermes.sh
 ```
 
-The startup script idempotently applies the Telegram output policy before
-starting the mini-app server and Hermes gateway. Redeploying the container
-therefore preserves the desired behavior, while a fresh volume receives the
-same configuration automatically.
+The startup script idempotently applies quiet Telegram and Discord output
+policies before starting the mini-app server and Hermes gateway. Redeploying
+the container therefore preserves the desired behavior, while a fresh volume
+receives the same configuration automatically.
+
+### Discord setup
+
+Hermes owns the Discord transport, sessions, authorization, threads, and
+response delivery; Blanket Fort does not run a separate Discord SDK or webhook.
+
+1. In the [Discord Developer Portal](https://discord.com/developers/applications),
+   create an application named **Fort** and use its bot user.
+2. On the Bot page, enable **Server Members Intent** and **Message Content
+   Intent**. Leave **Require OAuth2 Code Grant** off.
+3. Install the bot to the private test server with the `bot` and
+   `applications.commands` scopes. Grant only View Channels, Send Messages,
+   Embed Links, Attach Files, Read Message History, Send Messages in Threads,
+   and Add Reactions.
+4. Enable Developer Mode in Discord, then copy the allowlisted user ID and the
+   private channel IDs where builds may be requested.
+5. Add these Railway variables without committing their values:
+
+   - `DISCORD_BOT_TOKEN` — the bot token from the Developer Portal;
+   - `DISCORD_ALLOWED_USERS` — comma-separated authorized Discord user IDs;
+   - `DISCORD_ALLOWED_CHANNELS` — comma-separated private channel IDs.
+
+The startup script supplies secure defaults: `DISCORD_ALLOW_ALL_USERS=false`,
+`DISCORD_REQUIRE_MENTION=true`, `DISCORD_IGNORE_NO_MENTION=true`,
+`DISCORD_ALLOW_BOTS=none`, `DISCORD_AUTO_THREAD=true`, and
+`DISCORD_REACTIONS=false`. Railway may override these explicitly, but the
+private prototype should keep them unchanged. The bot therefore ignores normal
+channel chatter, unauthorized users, other bots, and all unlisted channels.
+Each authorized `@Fort` request starts an isolated thread.
+
+After redeployment, check `hermes gateway status`, send a non-mention that
+should be ignored, then send `@Fort build a tiny test app` as an allowlisted
+user. Verify that one final app link returns in the thread and that Telegram
+continues to work. A private bot in a small number of servers does not require
+Discord review; verification and privileged-intent review become relevant as
+the bot approaches Discord's large-bot threshold.

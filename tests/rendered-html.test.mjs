@@ -35,6 +35,34 @@ test("server-renders the Blanket Fort product page", async () => {
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/i);
 });
 
+test("Hermes startup keeps Telegram and Discord quiet and private", async () => {
+  const [startup, contract] = await Promise.all([
+    readFile(new URL("../scripts/start-railway-hermes.sh", import.meta.url), "utf8"),
+    readFile(new URL("../generated-apps/AGENTS.md", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(startup, /for platform in telegram discord/);
+  for (const setting of [
+    "tool_progress",
+    "busy_ack_detail",
+    "interim_assistant_messages",
+    "long_running_notifications",
+    "cleanup_progress",
+  ]) {
+    assert.match(startup, new RegExp(`display\\.platforms\\.\\$\\{platform\\}\\.${setting}`));
+  }
+
+  assert.match(startup, /DISCORD_ALLOW_ALL_USERS.*false/);
+  assert.match(startup, /DISCORD_REQUIRE_MENTION.*true/);
+  assert.match(startup, /DISCORD_IGNORE_NO_MENTION.*true/);
+  assert.match(startup, /DISCORD_ALLOW_BOTS.*none/);
+  assert.match(startup, /DISCORD_AUTO_THREAD.*true/);
+  assert.match(startup, /DISCORD_REACTIONS.*false/);
+  assert.doesNotMatch(startup, /DISCORD_BOT_TOKEN=/);
+  assert.match(contract, /Telegram and Discord/);
+  assert.match(contract, /final chat response/);
+});
+
 test("landing page and mini-app hub support device-aware Japanese and English", async () => {
   const [page, hub] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
